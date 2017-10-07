@@ -1,20 +1,19 @@
 package com.kmf.identity.resource
 
 import com.kmf.identity.domain.User
+import com.kmf.identity.domain.UserService
+import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
 @Path("/identity")
-class Resource {
+class Resource @Inject constructor(val userService: UserService) {
 
   @Path("/users")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  fun createUser(user: User): User {
-    println("user is ${user}")
-    return user
-  }
+  fun createUser(user: User) = userService.createUser(user)
 
   @Path("/version")
   @GET
