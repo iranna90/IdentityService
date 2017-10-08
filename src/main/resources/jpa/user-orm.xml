@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <entity-mappings version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm">
   <named-query name="retrieve_user_details">
-    <query>select u from User u where u.name=:name and u.password=:password</query>
+    <query>select u from User u where u.name=:name and u.password=:password and u.dairyId=:dairyId</query>
   </named-query>
 
   <named-query name="retrieve_user_by_id_details">

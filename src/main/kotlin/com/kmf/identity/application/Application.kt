@@ -4,6 +4,8 @@ package com.kmf.identity.application
 import com.google.inject.Guice
 import com.google.inject.Inject
 import com.google.inject.Injector
+import com.google.inject.Singleton
+import com.google.inject.name.Names
 import com.google.inject.persist.PersistService
 import com.google.inject.persist.jpa.JpaPersistModule
 import com.google.inject.servlet.GuiceFilter
@@ -12,12 +14,14 @@ import com.google.inject.servlet.ServletModule
 import com.kmf.identity.database.UserDaoImpl
 import com.kmf.identity.domain.UserRepository
 import com.kmf.identity.resource.Resource
+import com.kmf.identity.services.TokenUtil
 import com.kmf.identity.services.UserService
 import com.kmf.identity.services.UserServiceImpl
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.ServletContextHandler
+import java.util.*
 
 fun main(args: Array<String>) {
   startServer()
@@ -60,10 +64,19 @@ class ApplicationModule : ServletModule() {
   override fun configureServlets() {
     // register the resources
     bind(Resource::class.java)
+    bind(TokenUtil::class.java).`in`(Singleton::class.java)
     bind(UserService::class.java).to(UserServiceImpl::class.java)
     bind(UserRepository::class.java).to(UserDaoImpl::class.java)
+    Names.bindProperties(binder(), getProperties())
     // serve all requests from guice container
     serve("/*").with(GuiceContainer::class.java)
+  }
+
+  private fun getProperties(): Properties {
+    val prop = Properties()
+    val resourceAsStream = this.javaClass.classLoader.getResourceAsStream("application.properties")
+    prop.load(resourceAsStream)
+    return prop
   }
 }
 

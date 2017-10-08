@@ -8,21 +8,17 @@ import java.math.BigInteger
 private val Int.BI: BigInteger
   get() = BigInteger.valueOf(this.toLong())
 
-data class User @JsonCreator constructor(
-    @JsonProperty("dairyId") val dairyId: String,
-    @JsonProperty("name") val name: String,
-    @JsonProperty("password") val password: String,
-    @JsonProperty("role") val role: String
-) {
-
+data class User @JsonCreator constructor(@JsonProperty("dairyId") val dairyId: String, @JsonProperty("name") val name: String, @JsonProperty("password") val password: String, @JsonProperty("role") val role: String) {
   protected constructor() : this("", "", "", "")
 
   @JsonIgnore
   val id: BigInteger? = null
 }
 
+data class TokenRequest @JsonCreator constructor(@JsonProperty("dairyId") val dairyId: String, @JsonProperty("name") val name: String, @JsonProperty("password") val password: String)
+
 interface UserRepository {
   fun createUser(user: User)
-  fun getUser(name: String, password: String): User
+  fun getUser(name: String, password: String, dairyId: String): User
   fun getUser(name: String): User
 }

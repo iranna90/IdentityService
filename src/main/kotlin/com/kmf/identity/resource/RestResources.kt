@@ -1,5 +1,6 @@
 package com.kmf.identity.resource
 
+import com.kmf.identity.domain.TokenRequest
 import com.kmf.identity.domain.User
 import com.kmf.identity.services.UserService
 import javax.inject.Inject
@@ -24,4 +25,10 @@ class Resource @Inject constructor(val userService: UserService) {
   @GET
   @Produces(MediaType.TEXT_PLAIN)
   fun getVersion() = "1.0.0"
+
+  @Path("/token")
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.TEXT_PLAIN)
+  fun generateToken(tokenRequest: TokenRequest) = userService.generateToken(tokenRequest)
 }
