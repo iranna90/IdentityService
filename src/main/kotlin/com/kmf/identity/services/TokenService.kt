@@ -1,11 +1,16 @@
 package com.kmf.identity.services
 
+import com.google.inject.Inject
 import com.kmf.identity.domain.User
-import com.kmf.identity.domain.UserService
+import com.kmf.identity.domain.UserRepository
 
-class UserServiceImpl : UserService {
+interface UserService {
+  fun createUser(user: User): User
+}
+
+class UserServiceImpl @Inject constructor(val userRepository: UserRepository) : UserService {
   override fun createUser(user: User): User {
-    println("user service is ${user}")
+    userRepository.createUser(user)
     return user
   }
 }

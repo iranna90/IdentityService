@@ -1,7 +1,7 @@
 package com.kmf.identity.resource
 
 import com.kmf.identity.domain.User
-import com.kmf.identity.domain.UserService
+import com.kmf.identity.services.UserService
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType

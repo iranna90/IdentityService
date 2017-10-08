@@ -8,7 +8,7 @@
       <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:1111/kmfdetails" />
       <property name="hibernate.connection.username" value="kmfadmin" />
       <property name="hibernate.connection.password" value="changeme001" />
-      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
       <property name="hibernate.connection.pool_size" value="10"/>
       <property name="hibernate.id.new_generator_mappings" value="true"/>
     </properties>

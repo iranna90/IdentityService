@@ -9,8 +9,10 @@ import com.google.inject.persist.jpa.JpaPersistModule
 import com.google.inject.servlet.GuiceFilter
 import com.google.inject.servlet.GuiceServletContextListener
 import com.google.inject.servlet.ServletModule
-import com.kmf.identity.domain.UserService
+import com.kmf.identity.database.UserDaoImpl
+import com.kmf.identity.domain.UserRepository
 import com.kmf.identity.resource.Resource
+import com.kmf.identity.services.UserService
 import com.kmf.identity.services.UserServiceImpl
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer
 import org.eclipse.jetty.server.Server
@@ -59,7 +61,7 @@ class ApplicationModule : ServletModule() {
     // register the resources
     bind(Resource::class.java)
     bind(UserService::class.java).to(UserServiceImpl::class.java)
-
+    bind(UserRepository::class.java).to(UserDaoImpl::class.java)
     // serve all requests from guice container
     serve("/*").with(GuiceContainer::class.java)
   }

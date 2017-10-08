@@ -14,10 +14,14 @@ data class User @JsonCreator constructor(
     @JsonProperty("password") val password: String,
     @JsonProperty("role") val role: String
 ) {
+
+  protected constructor() : this("", "", "", "")
+
   @JsonIgnore
   var id: BigInteger = 0.BI
 }
 
-interface UserService {
-  fun createUser(user: User): User
+interface UserRepository {
+  fun createUser(user: User)
+  fun getUser(name: String, password: String): User
 }
