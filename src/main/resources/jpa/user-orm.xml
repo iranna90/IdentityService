@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm">
+  <entity class="com.kmf.identity.domain.User" name="User" metadata-complete="true" access="FIELD">
+    <table name="user_details"/>
+    <attributes>
+      <id name="id" access="FIELD">
+        <column name="id" unique="true" nullable="false"/>
+      </id>
+      <basic name="name" access="FIELD" fetch="EAGER">
+        <column name="name" nullable="false" unique="true"/>
+      </basic>
+      <basic name="password" access="FIELD" fetch="EAGER">
+        <column name="password" unique="false" nullable="false"/>
+      </basic>
+      <basic name="dairyId" access="FIELD" fetch="EAGER">
+        <column name="dairy_id" nullable="false" unique="false"/>
+      </basic>
+      <basic name="role" access="FIELD" fetch="EAGER">
+        <column name="role" nullable="false" unique="false"/>
+      </basic>
+    </attributes>
+  </entity>
+</entity-mappings>

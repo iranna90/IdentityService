@@ -8,5 +8,4 @@ class UserServiceImpl : UserService {
     println("user service is ${user}")
     return user
   }
-
 }

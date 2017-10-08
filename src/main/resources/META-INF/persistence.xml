@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             version="1.0">
+  <persistence-unit name="identity-service-db" transaction-type="RESOURCE_LOCAL">
+    <mapping-file>jpa/user-orm.xml</mapping-file>
+    <properties>
+      <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
+      <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:1111/kmfdetails" />
+      <property name="hibernate.connection.username" value="kmfadmin" />
+      <property name="hibernate.connection.password" value="changeme001" />
+      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+      <property name="hibernate.connection.pool_size" value="10"/>
+      <property name="hibernate.id.new_generator_mappings" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>

@@ -2,6 +2,10 @@ package com.kmf.identity.application
 
 
 import com.google.inject.Guice
+import com.google.inject.Inject
+import com.google.inject.Injector
+import com.google.inject.persist.PersistService
+import com.google.inject.persist.jpa.JpaPersistModule
 import com.google.inject.servlet.GuiceFilter
 import com.google.inject.servlet.GuiceServletContextListener
 import com.google.inject.servlet.ServletModule
@@ -42,7 +46,11 @@ fun startServer() {
 }
 
 class ApplicationConfig : GuiceServletContextListener() {
-  override fun getInjector() = Guice.createInjector(ApplicationModule())
+  override fun getInjector(): Injector {
+    val injector = Guice.createInjector(ApplicationModule(), JpaPersistModule("identity-service-db"))
+    injector.getInstance(DatabaseInitializer::class.java)
+    return injector
+  }
 }
 
 
@@ -54,6 +62,13 @@ class ApplicationModule : ServletModule() {
 
     // serve all requests from guice container
     serve("/*").with(GuiceContainer::class.java)
+  }
+}
+
+class DatabaseInitializer @Inject constructor(val persistService: PersistService) {
+  init {
+    println("starting the data base unit")
+    persistService.start()
   }
 }
 
