@@ -3,11 +3,17 @@
   <named-query name="retrieve_user_details">
     <query>select u from User u where u.name=:name and u.password=:password</query>
   </named-query>
+
   <entity class="com.kmf.identity.domain.User" name="User" metadata-complete="true" access="FIELD">
     <table name="user_details"/>
     <attributes>
       <id name="id" access="FIELD">
         <column name="id" unique="true" nullable="false"/>
+        <generated-value strategy="SEQUENCE" generator="id_seq"/>
+        <sequence-generator name="id_seq"
+                            allocation-size="1"
+                            sequence-name="user_details_id_seq"
+                            initial-value="1"/>
       </id>
       <basic name="name" access="FIELD" fetch="EAGER">
         <column name="name" nullable="false" unique="true"/>

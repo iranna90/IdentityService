@@ -18,7 +18,7 @@ data class User @JsonCreator constructor(
   protected constructor() : this("", "", "", "")
 
   @JsonIgnore
-  var id: BigInteger = 0.BI
+  val id: BigInteger? = null
 }
 
 interface UserRepository {
