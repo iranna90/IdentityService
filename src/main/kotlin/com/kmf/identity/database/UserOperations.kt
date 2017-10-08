@@ -19,4 +19,10 @@ open class UserDaoImpl @Inject constructor(val entityManagerProvider: Provider<E
       .setParameter("password", password)
       .singleResult
 
+  override @Transactional
+  fun getUser(name: String) = entityManagerProvider.get()
+      .createNamedQuery("retrieve_user_by_id_details", User::class.java)
+      .setParameter("name", name)
+      .singleResult
+
 }

@@ -24,4 +24,5 @@ data class User @JsonCreator constructor(
 interface UserRepository {
   fun createUser(user: User)
   fun getUser(name: String, password: String): User
+  fun getUser(name: String): User
 }

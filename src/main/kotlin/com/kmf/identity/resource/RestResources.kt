@@ -15,6 +15,11 @@ class Resource @Inject constructor(val userService: UserService) {
   @Produces(MediaType.APPLICATION_JSON)
   fun createUser(user: User) = userService.createUser(user)
 
+  @Path("users/{userId}")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  fun getUser(@PathParam("userId") userId: String) = userService.getUser(userId)
+
   @Path("/version")
   @GET
   @Produces(MediaType.TEXT_PLAIN)

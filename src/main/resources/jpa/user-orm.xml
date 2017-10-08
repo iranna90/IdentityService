@@ -4,6 +4,10 @@
     <query>select u from User u where u.name=:name and u.password=:password</query>
   </named-query>
 
+  <named-query name="retrieve_user_by_id_details">
+    <query>select u from User u where u.name=:name</query>
+  </named-query>
+
   <entity class="com.kmf.identity.domain.User" name="User" metadata-complete="true" access="FIELD">
     <table name="user_details"/>
     <attributes>
