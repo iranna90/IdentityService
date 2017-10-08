@@ -69,7 +69,6 @@ class ApplicationModule : ServletModule() {
 
 class DatabaseInitializer @Inject constructor(val persistService: PersistService) {
   init {
-    println("starting the data base unit")
     persistService.start()
   }
 }

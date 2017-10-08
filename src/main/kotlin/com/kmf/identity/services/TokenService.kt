@@ -1,6 +1,7 @@
 package com.kmf.identity.services
 
 import com.google.inject.Inject
+import com.google.inject.persist.Transactional
 import com.kmf.identity.domain.User
 import com.kmf.identity.domain.UserRepository
 
