@@ -7,7 +7,7 @@ services:
     volumes:
       - "../src/main/resources/database:/docker-entrypoint-initdb.d/sql"
     environment:
-      DB_CONFIG: "identity_service:identity:chnageme001"
+      DB_CONFIG: "identity_service:identity:changeme001"
 
   identity-service:
     image: "${APPLICATION_IMAGE}"
@@ -15,6 +15,12 @@ services:
       context: ../
     ports:
       - "${APPLICATION_PORT}:8080"
+    environment:
+      - DB_HOST: "${HOST_IP}"
+        DB_PORT: "${POSTGRES_PORT}"
+        DB_NAME: "${POSTGRES_DB_NAME}"
+        DB_USERNAME: "${POSTGRES_UNAME}"
+        DB_PASSWORD: "${POSTGRES_PASSWORD}"
     depends_on:
       - postgres
     command:
