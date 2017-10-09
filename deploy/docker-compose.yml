@@ -16,11 +16,11 @@ services:
     ports:
       - "${APPLICATION_PORT}:8080"
     environment:
-      - DB_HOST: "${HOST_IP}"
-        DB_PORT: "${POSTGRES_PORT}"
-        DB_NAME: "${POSTGRES_DB_NAME}"
-        DB_USERNAME: "${POSTGRES_UNAME}"
-        DB_PASSWORD: "${POSTGRES_PASSWORD}"
+        DB.HOST: "${HOST_IP}"
+        DB.PORT: "${POSTGRES_PORT}"
+        DB.NAME: "${POSTGRES_DB_NAME}"
+        DB.USERNAME: "${POSTGRES_UNAME}"
+        DB.PASSWORD: "${POSTGRES_PASSWORD}"
     depends_on:
       - postgres
     command:

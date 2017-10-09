@@ -1,7 +1,10 @@
 package com.kmf.identity.application
 
 
-import com.google.inject.*
+import com.google.inject.Guice
+import com.google.inject.Injector
+import com.google.inject.Provides
+import com.google.inject.Singleton
 import com.google.inject.name.Names
 import com.google.inject.servlet.GuiceFilter
 import com.google.inject.servlet.GuiceServletContextListener
@@ -25,7 +28,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler
 import java.io.File
 import java.util.*
 import javax.persistence.EntityManager
-import javax.persistence.EntityManagerFactory
 import javax.persistence.Persistence
 
 
@@ -80,8 +82,16 @@ class ApplicationModule : ServletModule() {
 
   @Provides
   @Singleton
-  private fun entityManagerFactory(): EntityManagerFactory {
-    return Persistence.createEntityManagerFactory("identity-service-db", getProperties("kmf.hibernate"))
+  private fun entityManagerFactory() = Persistence.createEntityManagerFactory("identity-service-db", getDatabaseProperties())
+
+  private fun getDatabaseProperties(): HashMap<String, String> {
+    val properties = HashMap<String, String>()
+    val envProps = getProperties("DB")
+    properties.put("hibernate.connection.url", "jdbc:postgresql://${envProps.getProperty("HOST")}:${envProps.getProperty("PORT")}/${envProps.getProperty("NAME")}")
+    properties.put("hibernate.connection.username", envProps.getProperty("USERNAME"))
+    properties.put("hibernate.connection.password", envProps.getProperty("PASSWORD"))
+    properties.put("hibernate.connection.pool_size", envProps.getProperty("CONNECTION_POOL"))
+    return properties
   }
 
   private fun getProperties(prefix: String): Properties {
