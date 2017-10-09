@@ -1,0 +1,19 @@
+version: '2'
+services:
+  postgres:
+    image: "${POSTGRES_IMAGE}"
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - "../main/resources/database:/docker-entrypoint-initdb.d/sql"
+    environment:
+      DB_CONFIG: "identity_service:identity:chnageme001"
+
+  identity-service:
+    image: "${APPLICATION_IMAGE}"
+    build:
+      context: ../
+    ports:
+      - "${APPLICATION_PORT}:8080"
+    depends_on:
+      - postgres
