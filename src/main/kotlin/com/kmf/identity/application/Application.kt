@@ -1,16 +1,12 @@
 package com.kmf.identity.application
 
 
-import com.google.inject.Guice
-import com.google.inject.Inject
-import com.google.inject.Injector
-import com.google.inject.Singleton
+import com.google.inject.*
 import com.google.inject.name.Names
-import com.google.inject.persist.PersistService
-import com.google.inject.persist.jpa.JpaPersistModule
 import com.google.inject.servlet.GuiceFilter
 import com.google.inject.servlet.GuiceServletContextListener
 import com.google.inject.servlet.ServletModule
+import com.kmf.identity.database.EntityManagerProvider
 import com.kmf.identity.database.UserDaoImpl
 import com.kmf.identity.domain.UserRepository
 import com.kmf.identity.resource.Resource
@@ -18,10 +14,20 @@ import com.kmf.identity.services.TokenUtil
 import com.kmf.identity.services.UserService
 import com.kmf.identity.services.UserServiceImpl
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer
+import org.apache.commons.configuration2.CompositeConfiguration
+import org.apache.commons.configuration2.ConfigurationConverter
+import org.apache.commons.configuration2.EnvironmentConfiguration
+import org.apache.commons.configuration2.SubsetConfiguration
+import org.apache.commons.configuration2.builder.fluent.Configurations
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.ServletContextHandler
+import java.io.File
 import java.util.*
+import javax.persistence.EntityManager
+import javax.persistence.EntityManagerFactory
+import javax.persistence.Persistence
+
 
 fun main(args: Array<String>) {
   startServer()
@@ -53,8 +59,7 @@ fun startServer() {
 
 class ApplicationConfig : GuiceServletContextListener() {
   override fun getInjector(): Injector {
-    val injector = Guice.createInjector(ApplicationModule(), JpaPersistModule("identity-service-db"))
-    injector.getInstance(DatabaseInitializer::class.java)
+    val injector = Guice.createInjector(ApplicationModule())
     return injector
   }
 }
@@ -67,22 +72,30 @@ class ApplicationModule : ServletModule() {
     bind(TokenUtil::class.java).`in`(Singleton::class.java)
     bind(UserService::class.java).to(UserServiceImpl::class.java)
     bind(UserRepository::class.java).to(UserDaoImpl::class.java)
-    Names.bindProperties(binder(), getProperties())
+    bind(EntityManager::class.java).toProvider(EntityManagerProvider::class.java)
+    Names.bindProperties(binder(), getProperties("kmf.application"))
     // serve all requests from guice container
     serve("/*").with(GuiceContainer::class.java)
   }
 
-  private fun getProperties(): Properties {
-    val prop = Properties()
-    val resourceAsStream = this.javaClass.classLoader.getResourceAsStream("application.properties")
-    prop.load(resourceAsStream)
-    return prop
+  @Provides
+  @Singleton
+  private fun entityManagerFactory(): EntityManagerFactory {
+    return Persistence.createEntityManagerFactory("identity-service-db", getProperties("kmf.hibernate"))
   }
-}
 
-class DatabaseInitializer @Inject constructor(val persistService: PersistService) {
-  init {
-    persistService.start()
+  private fun getProperties(prefix: String): Properties {
+    val compositeConfiguration = CompositeConfiguration()
+    val environmentConfiguration = EnvironmentConfiguration()
+    val configurations = Configurations()
+    val propertiesConfiguration = configurations.properties(File("application.properties"))
+
+    // add env config to composite config
+    compositeConfiguration.addConfiguration(environmentConfiguration)
+    // add file config
+    compositeConfiguration.addConfiguration(propertiesConfiguration)
+    val subsetConfiguration = SubsetConfiguration(compositeConfiguration, prefix, ".")
+    return ConfigurationConverter.getProperties(subsetConfiguration)
   }
 }
 
