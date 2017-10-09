@@ -15,7 +15,9 @@ echo "Deploy down if already up"
 
 docker-compose -f $COMPOSE_FILE_PATH down
 
+echo "Build the application"
+docker-compose -f $COMPOSE_FILE_PATH build
 echo "Deploy the application"
-docker-compose -f $COMPOSE_FILE_PATH up
+docker-compose -f $COMPOSE_FILE_PATH up -d --remove-orphans --no-build
 
 

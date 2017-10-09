@@ -5,7 +5,7 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
-      - "../main/resources/database:/docker-entrypoint-initdb.d/sql"
+      - "../src/main/resources/database:/docker-entrypoint-initdb.d/sql"
     environment:
       DB_CONFIG: "identity_service:identity:chnageme001"
 
@@ -17,3 +17,10 @@ services:
       - "${APPLICATION_PORT}:8080"
     depends_on:
       - postgres
+    command:
+      - "java"
+      - "-Xdebug"
+      - "-agentlib:jdwp=transport=dt_socket,address=6000,server=y,suspend=n"
+      - "-server"
+      - "-jar"
+      - "application.jar"
