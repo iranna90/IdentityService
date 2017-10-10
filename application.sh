@@ -7,7 +7,7 @@ export HOST_IP="$IP_ADDRESS_ON_LAN"
 
 export POSTGRES_IMAGE="docker-ngmpp-prod.artifactory.engineering-hdc.net/library/postgres:9.5.5-5"
 export APPLICATION_IMAGE="identity-server"
-export POSTGRES_PORT=1111
+export POSTGRES_PORT=5532
 export APPLICATION_PORT=9876
 export POSTGRES_DB_NAME=identity_service
 export POSTGRES_UNAME=identity

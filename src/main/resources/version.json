@@ -1,0 +1,4 @@
+{
+  "name": "identity-service",
+  "version": "${project.version}"
+}

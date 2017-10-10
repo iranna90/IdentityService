@@ -1,5 +1,6 @@
 package com.kmf.identity.services
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import com.kmf.identity.domain.TokenRequest
@@ -22,7 +23,7 @@ import java.util.stream.Collectors.joining
 interface UserService {
   fun createUser(user: User): User
   fun getUser(userId: String): User
-  fun generateToken(tokenRequest: TokenRequest): String
+  fun generateToken(tokenRequest: TokenRequest): Token
 }
 
 class UserServiceImpl @Inject constructor(val userRepository: UserRepository, val tokenUtil: TokenUtil) : UserService {
@@ -60,7 +61,7 @@ class TokenUtil @Inject constructor(
     privateKey = kf.generatePrivate(spec)
   }
 
-  internal fun generateToken(user: User): String {
+  internal fun generateToken(user: User): Token {
     val expirationPeriod = ZonedDateTime.now().plusMinutes(expirationPeriodInMinute)
     val jwtClaimsSet = JWTClaimsSet.Builder()
         .audience(audience)
@@ -74,11 +75,13 @@ class TokenUtil @Inject constructor(
     return signTheToken(jwtClaimsSet)
   }
 
-  private fun signTheToken(claimsSet: JWTClaimsSet): String {
+  private fun signTheToken(claimsSet: JWTClaimsSet): Token {
     val signer = RSASSASigner(privateKey)
     val jwsHeader = JWSHeader.Builder(JWSAlgorithm.RS256).keyID(keyId).build()
     val signedJwt = SignedJWT(jwsHeader, claimsSet)
     signedJwt.sign(signer)
-    return signedJwt.serialize()
+    return Token(signedJwt.serialize())
   }
 }
+
+data class Token(@JsonProperty("token") val token: String)

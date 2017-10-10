@@ -13,6 +13,7 @@ import com.kmf.identity.database.EntityManagerProvider
 import com.kmf.identity.database.UserDaoImpl
 import com.kmf.identity.domain.UserRepository
 import com.kmf.identity.resource.Resource
+import com.kmf.identity.resource.VersionResource
 import com.kmf.identity.services.TokenUtil
 import com.kmf.identity.services.UserService
 import com.kmf.identity.services.UserServiceImpl
@@ -71,6 +72,7 @@ class ApplicationModule : ServletModule() {
   override fun configureServlets() {
     // register the resources
     bind(Resource::class.java)
+    bind(VersionResource::class.java)
     bind(TokenUtil::class.java).`in`(Singleton::class.java)
     bind(UserService::class.java).to(UserServiceImpl::class.java)
     bind(UserRepository::class.java).to(UserDaoImpl::class.java)
