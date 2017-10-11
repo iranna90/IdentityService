@@ -34,7 +34,7 @@ class Resource @Inject constructor(val userService: UserService) {
 
   @Path("/token")
   @POST
-  @Consumes(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   fun generateToken(tokenRequest: TokenRequest) = userService.generateToken(tokenRequest)
 }
@@ -55,15 +55,13 @@ class VersionResource @Inject constructor(objectMapper: ObjectMapper) {
 @Consumes(MediaType.APPLICATION_OCTET_STREAM)
 class UserDetailsReader : MessageBodyReader<TokenRequest> {
 
-  override fun isReadable(clazz: Class<*>?, p1: Type?, p2: Array<out Annotation>?, p3: MediaType?) = Optional.ofNullable(clazz).filter { it.equals(TokenRequest::class) }.isPresent
+  override fun isReadable(clazz: Class<*>?, p1: Type?, p2: Array<out Annotation>?, p3: MediaType?) = Optional.ofNullable(clazz).filter { it.equals(TokenRequest::class.java) }.isPresent
 
   override fun readFrom(clazz: Class<TokenRequest>?, p1: Type?, p2: Array<out Annotation>?, p3: MediaType?, headers: MultivaluedMap<String, String>?, dataStream: InputStream?): TokenRequest {
     val contentLength = headers?.getFirst(HttpHeaders.CONTENT_LENGTH)?.toInt()
     val byteArray = getBytesFromStream(dataStream, contentLength)
     return readTokenRequestFromBytes(byteArray)
   }
-
-
 }
 
 private fun getBytesFromStream(dataStream: InputStream?, contentLength: Int?): ByteArray {
