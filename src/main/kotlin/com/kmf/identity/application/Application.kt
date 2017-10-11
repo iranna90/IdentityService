@@ -86,28 +86,29 @@ class ApplicationModule : ServletModule() {
   @Singleton
   private fun entityManagerFactory() = Persistence.createEntityManagerFactory("identity-service-db", getDatabaseProperties())
 
-  private fun getDatabaseProperties(): HashMap<String, String> {
-    val properties = HashMap<String, String>()
-    val envProps = getProperties("DB")
-    properties.put("hibernate.connection.url", "jdbc:postgresql://${envProps.getProperty("HOST")}:${envProps.getProperty("PORT")}/${envProps.getProperty("NAME")}")
-    properties.put("hibernate.connection.username", envProps.getProperty("USERNAME"))
-    properties.put("hibernate.connection.password", envProps.getProperty("PASSWORD"))
-    properties.put("hibernate.connection.pool_size", envProps.getProperty("CONNECTION_POOL"))
-    return properties
-  }
+}
 
-  private fun getProperties(prefix: String): Properties {
-    val compositeConfiguration = CompositeConfiguration()
-    val environmentConfiguration = EnvironmentConfiguration()
-    val configurations = Configurations()
-    val propertiesConfiguration = configurations.properties(File("application.properties"))
+private fun getDatabaseProperties(): HashMap<String, String> {
+  val properties = HashMap<String, String>()
+  val envProps = getProperties("DB")
+  properties.put("hibernate.connection.url", "jdbc:postgresql://${envProps.getProperty("HOST")}:${envProps.getProperty("PORT")}/${envProps.getProperty("NAME")}")
+  properties.put("hibernate.connection.username", envProps.getProperty("USERNAME"))
+  properties.put("hibernate.connection.password", envProps.getProperty("PASSWORD"))
+  properties.put("hibernate.connection.pool_size", envProps.getProperty("CONNECTION_POOL"))
+  return properties
+}
 
-    // add env config to composite config
-    compositeConfiguration.addConfiguration(environmentConfiguration)
-    // add file config
-    compositeConfiguration.addConfiguration(propertiesConfiguration)
-    val subsetConfiguration = SubsetConfiguration(compositeConfiguration, prefix, ".")
-    return ConfigurationConverter.getProperties(subsetConfiguration)
-  }
+private fun getProperties(prefix: String): Properties {
+  val compositeConfiguration = CompositeConfiguration()
+  val environmentConfiguration = EnvironmentConfiguration()
+  val configurations = Configurations()
+  val propertiesConfiguration = configurations.properties(File("application.properties"))
+
+  // add env config to composite config
+  compositeConfiguration.addConfiguration(environmentConfiguration)
+  // add file config
+  compositeConfiguration.addConfiguration(propertiesConfiguration)
+  val subsetConfiguration = SubsetConfiguration(compositeConfiguration, prefix, ".")
+  return ConfigurationConverter.getProperties(subsetConfiguration)
 }
 
