@@ -9,7 +9,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <kotlin.version>1.0.3</kotlin.version>
+    <kotlin.version>1.1.51</kotlin.version>
     <jersey.version>2.26</jersey.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jackson.version>2.8.9</jackson.version>
@@ -19,6 +19,13 @@
     <postgres-client.version>42.1.4</postgres-client.version>
     <c3p0.version>0.9.5.2</c3p0.version>
     <maven-resource-plugin.version>2.3</maven-resource-plugin.version>
+    <mockito.version>2.10.0</mockito.version>
+    <hamcrest-core.version>1.3</hamcrest-core.version>
+    <nimbus-jose-jwt.version>5.1</nimbus-jose-jwt.version>
+    <guava.version>23.0</guava.version>
+    <commons-configuration2.version>2.1.1</commons-configuration2.version>
+    <commons-beanutils.version>1.9.3</commons-beanutils.version>
+    <jersey-media-json-jackson.version>2.25.1</jersey-media-json-jackson.version>
   </properties>
 
   <dependencyManagement>
@@ -30,7 +37,13 @@
         <artifactId>kotlin-stdlib</artifactId>
         <version>${kotlin.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-noarg</artifactId>
+        <version>${kotlin.version}</version>
+      </dependency>
 
+      <!-- jersey -->
       <dependency>
         <groupId>org.glassfish.jersey</groupId>
         <artifactId>jersey-bom</artifactId>
@@ -41,18 +54,8 @@
 
       <!-- jackson-->
       <dependency>
-        <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-jdk8</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-jsr310</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-json-org</artifactId>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
         <version>${jackson.version}</version>
       </dependency>
       <dependency>
@@ -60,8 +63,14 @@
         <artifactId>jackson-annotations</artifactId>
         <version>${jackson.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.jaxrs</groupId>
+        <artifactId>jackson-jaxrs-json-provider</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
 
-      <!-- dependency injection-->
+
+      <!-- guice injection-->
       <dependency>
         <groupId>com.google.inject.extensions</groupId>
         <artifactId>guice-persist</artifactId>
@@ -71,21 +80,6 @@
         <groupId>com.sun.jersey.contribs</groupId>
         <artifactId>jersey-guice</artifactId>
         <version>RELEASE</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-          </exclusion>
-          <exclusion>
-            <artifactId>jersey-server</artifactId>
-            <groupId>com.sun.jersey</groupId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>23.0</version>
       </dependency>
 
 
@@ -116,18 +110,24 @@
       <dependency>
         <groupId>com.nimbusds</groupId>
         <artifactId>nimbus-jose-jwt</artifactId>
-        <version>5.1</version>
+        <version>${nimbus-jose-jwt.version}</version>
       </dependency>
 
+      <!-- configuration -->
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-configuration2</artifactId>
-        <version>2.1.1</version>
+        <version>${commons-configuration2.version}</version>
       </dependency>
       <dependency>
         <groupId>commons-beanutils</groupId>
         <artifactId>commons-beanutils</artifactId>
-        <version>1.9.3</version>
+        <version>${commons-beanutils.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
       </dependency>
 
       <!-- Testing-->
@@ -140,37 +140,31 @@
       <dependency>
         <groupId>org.hamcrest</groupId>
         <artifactId>hamcrest-core</artifactId>
-        <version>1.3</version>
+        <version>${hamcrest-core.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
-
-    <!-- Kotlin -->
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib</artifactId>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-maven-noarg -->
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-maven-noarg</artifactId>
-      <version>1.1.51</version>
     </dependency>
-
-    <!-- Jetty container -->
     <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
       <artifactId>jersey-container-jetty-servlet</artifactId>
     </dependency>
-
-    <!-- json operation -->
     <dependency>
       <groupId>com.nimbusds</groupId>
       <artifactId>nimbus-jose-jwt</artifactId>
@@ -180,15 +174,25 @@
       <artifactId>jackson-annotations</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.glassfish.jersey.media</groupId>
       <artifactId>jersey-media-json-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.jaxrs</groupId>
+      <artifactId>jackson-jaxrs-json-provider</artifactId>
     </dependency>
     <dependency>
       <groupId>com.sun.jersey.contribs</groupId>
       <artifactId>jersey-guice</artifactId>
     </dependency>
-
-    <!-- Data base -->
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-persist</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
@@ -205,8 +209,6 @@
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-persist</artifactId>
     </dependency>
-
-    <!-- Configuration management -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-configuration2</artifactId>
@@ -219,12 +221,9 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
-
-    <!-- Jersey unit test framework-->
     <dependency>
       <groupId>org.glassfish.jersey.test-framework.providers</groupId>
       <artifactId>jersey-test-framework-provider-jetty</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.test-framework</groupId>
@@ -242,7 +241,6 @@
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.hamcrest</groupId>
@@ -252,6 +250,7 @@
 
   <build>
     <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
     <defaultGoal>generate-sources</defaultGoal>
     <resources>
       <resource>

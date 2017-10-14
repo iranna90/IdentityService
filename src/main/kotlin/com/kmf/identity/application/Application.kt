@@ -33,9 +33,7 @@ import javax.persistence.EntityManager
 import javax.persistence.Persistence
 
 
-fun main(args: Array<String>) {
-  startServer()
-}
+fun main(args: Array<String>) = startServer()
 
 fun startServer() {
   // Create the server.

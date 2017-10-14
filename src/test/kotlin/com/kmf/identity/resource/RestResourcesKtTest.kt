@@ -50,10 +50,10 @@ class RestResourcesKtTest : JerseyTestNg.ContainerPerClassTest() {
   fun version() = assertThat(getOperation("${BASE_URL}/version", VersionDto::class.java), CoreMatchers.`is`(dto))
 
   @Test
-  fun getToken() = validateToken(tokenRequest).invoke(postOperation("${BASE_URL}/token", Entity.entity(binaryConversion.invoke(tokenRequest), MediaType.APPLICATION_OCTET_STREAM), Token::class.java))
+  fun tokenBinaryTest() = validateToken(tokenRequest).invoke(postOperation("${BASE_URL}/token", Entity.entity(binaryConversion.invoke(tokenRequest), MediaType.APPLICATION_OCTET_STREAM), Token::class.java))
 
   @Test
-  fun tokenBinaryTest() = validateToken(tokenRequest).invoke(postOperation("${BASE_URL}/token", Entity.entity(tokenRequest, MediaType.APPLICATION_JSON), Token::class.java))
+  fun getToken() = validateToken(tokenRequest).invoke(postOperation("${BASE_URL}/token", Entity.entity(tokenRequest, MediaType.APPLICATION_JSON), Token::class.java))
 
   private fun <R> getOperation(url: String, clazz: Class<R>): R = parseResponse(target(url).request().get(), clazz)
   private fun <T, R> postOperation(url: String, entity: Entity<T>, clazz: Class<R>): R = parseResponse(target(url).request().post(entity), clazz)
