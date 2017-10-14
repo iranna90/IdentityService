@@ -15,7 +15,7 @@ data class User @JsonCreator constructor(@JsonProperty("dairyId") val dairyId: S
   val id: BigInteger? = null
 }
 
-data class TokenRequest @JsonCreator constructor(@JsonProperty("dairyId") val dairyId: String, @JsonProperty("name") val name: String, @JsonProperty("password") val password: String)
+data class TokenRequestDto @JsonCreator constructor(@JsonProperty("dairyId") val dairyId: String, @JsonProperty("name") val name: String, @JsonProperty("password") val password: String)
 
 interface UserRepository {
   fun createUser(user: User)

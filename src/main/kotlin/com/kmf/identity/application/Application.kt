@@ -39,7 +39,7 @@ fun main(args: Array<String>) {
 
 fun startServer() {
   // Create the server.
-  val server = Server(9876)
+  val server = Server(8080)
 
   // Create a servlet context and add the jersey servlet.
   val sch = ServletContextHandler(server, "/")
@@ -75,6 +75,7 @@ class ApplicationModule : ServletModule() {
     bind(Resource::class.java)
     bind(VersionResource::class.java)
     bind(UserDetailsReader::class.java).`in`(Singleton::class.java)
+
     bind(TokenUtil::class.java).`in`(Singleton::class.java)
     bind(UserService::class.java).to(UserServiceImpl::class.java)
     bind(UserRepository::class.java).to(UserDaoImpl::class.java)
@@ -100,7 +101,7 @@ private fun getDatabaseProperties(): HashMap<String, String> {
   return properties
 }
 
-private fun getProperties(prefix: String): Properties {
+fun getProperties(prefix: String): Properties {
   val compositeConfiguration = CompositeConfiguration()
   val environmentConfiguration = EnvironmentConfiguration()
   val configurations = Configurations()

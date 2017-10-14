@@ -3,7 +3,7 @@ package com.kmf.identity.services
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.inject.Inject
 import com.google.inject.name.Named
-import com.kmf.identity.domain.TokenRequest
+import com.kmf.identity.domain.TokenRequestDto
 import com.kmf.identity.domain.User
 import com.kmf.identity.domain.UserRepository
 import com.nimbusds.jose.JWSAlgorithm
@@ -23,12 +23,12 @@ import java.util.stream.Collectors.joining
 interface UserService {
   fun createUser(user: User): User
   fun getUser(userId: String): User
-  fun generateToken(tokenRequest: TokenRequest): Token
+  fun generateToken(tokenRequest: TokenRequestDto): Token
 }
 
 class UserServiceImpl @Inject constructor(val userRepository: UserRepository, val tokenUtil: TokenUtil) : UserService {
 
-  override fun generateToken(tokenRequest: TokenRequest) = tokenUtil.generateToken(userRepository.getUser(tokenRequest.name, tokenRequest.password, tokenRequest.dairyId))
+  override fun generateToken(tokenRequest: TokenRequestDto) = tokenUtil.generateToken(userRepository.getUser(tokenRequest.name, tokenRequest.password, tokenRequest.dairyId))
 
   override fun getUser(userId: String) = userRepository.getUser(userId)
 
