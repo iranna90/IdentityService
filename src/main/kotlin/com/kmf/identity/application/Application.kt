@@ -39,7 +39,7 @@ fun main(args: Array<String>) {
 
 fun startServer() {
   // Create the server.
-  val server = Server(8080)
+  val server = Server(9876)
 
   // Create a servlet context and add the jersey servlet.
   val sch = ServletContextHandler(server, "/")
