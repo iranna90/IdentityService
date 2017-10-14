@@ -9,6 +9,8 @@ import com.google.inject.name.Names
 import com.google.inject.servlet.GuiceFilter
 import com.google.inject.servlet.GuiceServletContextListener
 import com.google.inject.servlet.ServletModule
+import com.kmf.identity.BadRequest
+import com.kmf.identity.EntityNotFoundMapper
 import com.kmf.identity.database.EntityManagerProvider
 import com.kmf.identity.database.UserDaoImpl
 import com.kmf.identity.domain.UserRepository
@@ -73,6 +75,9 @@ class ApplicationModule : ServletModule() {
     bind(Resource::class.java)
     bind(VersionResource::class.java)
     bind(UserDetailsReader::class.java).`in`(Singleton::class.java)
+    bind(EntityNotFoundMapper::class.java)
+    bind(BadRequest::class.java)
+    bind(InternalError::class.java)
 
     bind(TokenUtil::class.java).`in`(Singleton::class.java)
     bind(UserService::class.java).to(UserServiceImpl::class.java)
