@@ -3,6 +3,7 @@
              version="1.0">
   <persistence-unit name="identity-service-db" transaction-type="RESOURCE_LOCAL">
     <mapping-file>jpa/user-orm.xml</mapping-file>
+    <mapping-file>jpa/refresh-token-orm.xml</mapping-file>
     <properties>
       <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>

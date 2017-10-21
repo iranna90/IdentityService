@@ -2,8 +2,10 @@ package com.kmf.identity.database
 
 import com.google.inject.Inject
 import com.google.inject.Provider
+import com.kmf.identity.domain.RefreshToken
+import com.kmf.identity.domain.Repository
 import com.kmf.identity.domain.User
-import com.kmf.identity.domain.UserRepository
+import java.math.BigInteger
 import javax.persistence.EntityManager
 import javax.persistence.EntityManagerFactory
 
@@ -13,7 +15,7 @@ class EntityManagerProvider @Inject constructor(val entityManagerFactory: Entity
   }
 }
 
-open class UserDaoImpl @Inject constructor(val entityManagerProvider: EntityManagerProvider) : UserRepository {
+open class TokenRepositoryImpl @Inject constructor(val entityManagerProvider: EntityManagerProvider) : Repository {
 
   override
   fun createUser(user: User) = runWithTransaction { entityManager -> entityManager.persist(user) }
@@ -28,11 +30,19 @@ open class UserDaoImpl @Inject constructor(val entityManagerProvider: EntityMana
         .singleResult
   }
 
-  override
-  fun getUser(name: String) = runWithTransaction { entityManager ->
-    entityManager
-        .createNamedQuery("retrieve_user_by_id_details", User::class.java)
-        .setParameter("name", name)
+  override fun getRefreshTokenDetailsByUserId(id: BigInteger) = runWithTransaction { entityManager ->
+    entityManager.createNamedQuery("retrieve_refresh_token_by_user_id", RefreshToken::class.java)
+        .setParameter("id", id)
+        .singleResult
+  }
+
+  override fun updateRefreshToken(refreshToken: RefreshToken) = runWithTransaction { entityManager ->
+    entityManager.merge(refreshToken)
+  }
+
+  override fun getRefreshTokenDetails(refreshId: String) = runWithTransaction { entityManager ->
+    entityManager.createNamedQuery("retrieve_refresh_token", RefreshToken::class.java)
+        .setParameter("refreshId", refreshId)
         .singleResult
   }
 
@@ -44,5 +54,6 @@ open class UserDaoImpl @Inject constructor(val entityManagerProvider: EntityMana
     transaction.commit()
     return value
   }
+
 
 }

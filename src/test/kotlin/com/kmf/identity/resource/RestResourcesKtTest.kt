@@ -17,6 +17,7 @@ import javax.ws.rs.client.Entity
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
+internal val inValidRefreshToken = "invalid"
 private val dairyId = "khajuri"
 private val name = "iranna"
 private val password = "password"
@@ -26,7 +27,7 @@ private val dto = VersionDto("identity-service", "1.0-SNAPSHOT")
 private val objectMapper = ObjectMapper()
 private val versionResource = VersionResource(objectMapper)
 private val tokenRequest = TokenRequestDto(dairyId, name, password)
-private val subscriberUser = User(dairyId, name, password, subscriberRole)
+private val subscriberUser = User(id = 1.BI, dairyId = dairyId, name = name, password = password, role = subscriberRole)
 private val injector = Guice.createInjector(TestModule(subscriberUser))
 private val encode: (String) -> String = { data -> Base64.getEncoder().encodeToString(data.toByteArray()) }
 private val binaryConversion: (TokenRequestDto) -> ByteArray = { dto -> "${dto.dairyId}${separator}${dto.name}${separator}${encode.invoke(dto.password)}".toByteArray() }

@@ -11,9 +11,10 @@ import com.google.inject.servlet.GuiceServletContextListener
 import com.google.inject.servlet.ServletModule
 import com.kmf.identity.BadRequest
 import com.kmf.identity.EntityNotFoundMapper
+import com.kmf.identity.DomainEntityNotFoundMapper
 import com.kmf.identity.database.EntityManagerProvider
-import com.kmf.identity.database.UserDaoImpl
-import com.kmf.identity.domain.UserRepository
+import com.kmf.identity.database.TokenRepositoryImpl
+import com.kmf.identity.domain.Repository
 import com.kmf.identity.resource.Resource
 import com.kmf.identity.resource.UserDetailsReader
 import com.kmf.identity.resource.VersionResource
@@ -78,10 +79,11 @@ class ApplicationModule : ServletModule() {
     bind(EntityNotFoundMapper::class.java)
     bind(BadRequest::class.java)
     bind(InternalError::class.java)
+    bind(DomainEntityNotFoundMapper::class.java)
 
     bind(TokenUtil::class.java).`in`(Singleton::class.java)
     bind(UserService::class.java).to(UserServiceImpl::class.java)
-    bind(UserRepository::class.java).to(UserDaoImpl::class.java)
+    bind(Repository::class.java).to(TokenRepositoryImpl::class.java)
     bind(EntityManager::class.java).toProvider(EntityManagerProvider::class.java)
     Names.bindProperties(binder(), getProperties("kmf.application"))
     // serve all requests from guice container

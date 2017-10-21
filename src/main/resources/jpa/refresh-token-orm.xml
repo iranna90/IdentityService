@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm">
+  <named-query name="retrieve_refresh_token">
+    <query>select t from RefreshToken t where t.refreshId=:refreshId</query>
+  </named-query>
+
+  <named-query name="retrieve_refresh_token_by_user_id">
+    <query>select t from RefreshToken t where t.user.id =:id</query>
+  </named-query>
+
+  <entity class="com.kmf.identity.domain.RefreshToken" name="RefreshToken" metadata-complete="true" access="FIELD">
+    <table name="refresh_token_details"/>
+    <attributes>
+      <id name="id" access="FIELD">
+        <column name="id" unique="true" nullable="false"/>
+        <generated-value strategy="SEQUENCE" generator="id_seq"/>
+        <sequence-generator name="id_seq"
+                            allocation-size="1"
+                            sequence-name="refresh_token_details_id_seq"
+                            initial-value="1"/>
+      </id>
+      <basic name="refreshId" access="FIELD" fetch="EAGER">
+        <column name="refresh_id" nullable="false" unique="true"/>
+      </basic>
+      <one-to-one name="user" target-entity="com.kmf.identity.domain.User" fetch="EAGER">
+        <join-column name="user_ref" referenced-column-name="id" nullable="false" unique="true"/>
+      </one-to-one>
+    </attributes>
+  </entity>
+</entity-mappings>

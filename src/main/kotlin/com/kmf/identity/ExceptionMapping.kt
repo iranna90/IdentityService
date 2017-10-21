@@ -13,6 +13,16 @@ import javax.ws.rs.ext.Provider
 
 data class ErrorResponse @JsonCreator constructor(@JsonProperty("code") val code: Int, @JsonProperty("message") val message: String)
 
+
+@Provider
+@Singleton
+class InternalError : ExceptionMapper<Throwable> {
+  override fun toResponse(ex: Throwable): Response {
+    ex.printStackTrace()
+    return Response.status(INTERNAL_SERVER_ERROR_500).entity(ErrorResponse(INTERNAL_SERVER_ERROR_500, "Error accured while processing request")).type(MediaType.APPLICATION_JSON).build()
+  }
+}
+
 @Provider
 @Singleton
 class EntityNotFoundMapper : ExceptionMapper<NoResultException> {
@@ -34,11 +44,14 @@ class BadRequest : ExceptionMapper<JsonMappingException> {
   }
 }
 
+class DomainEntityNotFoundException(val code: Int, override val message: String) : Exception(message)
+
 @Provider
 @Singleton
-class InternalError : ExceptionMapper<Throwable> {
-  override fun toResponse(ex: Throwable): Response {
-    ex.printStackTrace()
-    return Response.status(INTERNAL_SERVER_ERROR_500).entity(ErrorResponse(INTERNAL_SERVER_ERROR_500, "Error accured while processing request")).type(MediaType.APPLICATION_JSON).build()
+class DomainEntityNotFoundMapper : ExceptionMapper<DomainEntityNotFoundException> {
+  override fun toResponse(exp: DomainEntityNotFoundException): Response {
+    exp.printStackTrace()
+    return Response.status(NOT_FOUND_404).entity(ErrorResponse(exp.code, exp.message)).type(MediaType.APPLICATION_JSON).build()
   }
+
 }
