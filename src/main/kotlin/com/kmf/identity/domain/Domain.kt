@@ -9,7 +9,7 @@ private val Int.BI: BigInteger
   get() = BigInteger.valueOf(this.toLong())
 
 data class User @JsonCreator constructor(
-    @JsonIgnore val id: BigInteger? = null,
+    @JsonIgnore @JsonProperty("id") val id: BigInteger? = null,
     @JsonProperty("dairyId") val dairyId: String,
     @JsonProperty("name") val name: String,
     @JsonProperty("password") val password: String,
